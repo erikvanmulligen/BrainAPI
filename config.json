@@ -1,0 +1,7 @@
+{
+	"sourceFolder":"main/java",
+	"basePackage":"io.swagger",
+	"configPackage":"io.swagger.config",
+	"ignoredParameterTypes":"Pageable.class"
+}
+
