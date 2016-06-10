@@ -30,7 +30,7 @@ public class TestTriples {
     public void testTriples(){
 	Set<Concept> sourceConcepts = brain.getConceptsSearch(new ConceptQuery("A02BC01", null, null, Arrays.asList(new String[]{"Chemicals & Drugs"}), null, null));
 	Set<Concept> targetConcepts = brain.getConceptsSearch(new ConceptQuery("cytoplasm", true, null, Arrays.asList(new String[]{"Disorders"}), null, null));
-	List<List<PathElement>> paths = brain.getConceptToConceptIndirect(sourceConcepts, targetConcepts, 0, 20);
+	List<List<PathElement>> paths = brain.getConceptToConceptIndirect(sourceConcepts, targetConcepts, 0, 20).getPaths(brain);
 	Set<TripleInfo> triples = brain.getTriples(Utils.getTriples(paths.get(0)));
 	logger.info(triples);
 	TestCase.assertTrue(triples.size()>0);
@@ -40,7 +40,7 @@ public class TestTriples {
     public void testTriple(){
 	Set<Concept> sourceConcepts = brain.getConceptsSearch(new ConceptQuery("A02BC01", null, null, Arrays.asList(new String[]{"Chemicals & Drugs"}), null, null));
 	Set<Concept> targetConcepts = brain.getConceptsSearch(new ConceptQuery("cytoplasm", true, null, Arrays.asList(new String[]{"Disorders"}), null, null));
-	List<List<PathElement>> paths = brain.getConceptToConceptIndirect(sourceConcepts, targetConcepts, 0, 20);
+	List<List<PathElement>> paths = brain.getConceptToConceptIndirect(sourceConcepts, targetConcepts, 0, 20).getPaths(brain);
 	if (paths != null && !paths.isEmpty()){
 	    Set<String> tripleIds = Utils.getTriples(paths.get(0));
 	    if (tripleIds != null && !tripleIds.isEmpty()){

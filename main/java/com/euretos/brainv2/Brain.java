@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,6 +51,7 @@ public class Brain {
     private static Type SearchKeySetType = new TypeToken<Set<String>>() {}.getType();
     private static Type TripleInfoSetType = new TypeToken<Set<TripleInfo>>() {}.getType();
     private static Type PublicationInfoSetType = new TypeToken<Set<PublicationInfo>>() {}.getType();
+    private static Type PathInfoSetType = new TypeToken<Set<PathInfo>>() {}.getType();
     
 
     private static Map<String,PredicateType> predicates = null;
@@ -122,7 +122,7 @@ public class Brain {
     }
 
     @SuppressWarnings("unchecked")
-    static public Map<String,PredicateType> getPredicates(){
+    public Map<String,PredicateType> getPredicates(){
 	PostResponse response = null;
 	boolean last = false;
 	int page = 0;
@@ -146,7 +146,7 @@ public class Brain {
     }
 
     @SuppressWarnings("unchecked")
-    static public Set<String> getScoringAlgorithms(){
+    public Set<String> getScoringAlgorithms(){
 	if (scoringAlgorithms == null){
 	    scoringAlgorithms = new HashSet<String>();
 	    PostResponse response = Utils.getUrl(endpoint + "/external/scoring-algorithms", token);
@@ -158,7 +158,7 @@ public class Brain {
     }
 
     @SuppressWarnings("unchecked")
-    static public Set<String> getKnowledgeBases(){
+    public Set<String> getKnowledgeBases(){
 	if (knowledgeBases == null){
 	    knowledgeBases = new HashSet<String>();
 	    PostResponse response = Utils.getUrl(endpoint + "/external/knowledge-bases", token);
@@ -170,7 +170,7 @@ public class Brain {
     }
 
     @SuppressWarnings("unchecked")
-    static public Set<String> getSources(){
+    public Set<String> getSources(){
 	if (sources == null){
 	    sources = new HashSet<String>();
 	    PostResponse response = Utils.getUrl(endpoint + "/external/sources", token);
@@ -182,7 +182,7 @@ public class Brain {
     }
 
     @SuppressWarnings("unchecked")
-    static public Map<String,Taxonomy> getTaxonomies(){
+    public Map<String,Taxonomy> getTaxonomies(){
 	PostResponse response = null;
 	boolean last = false;
 	int page = 0;
@@ -207,7 +207,7 @@ public class Brain {
     }
 
     @SuppressWarnings("unchecked")
-    static public Map<String,SemanticCategory> getSemanticCategories(){
+    public Map<String,SemanticCategory> getSemanticCategories(){
 	PostResponse response = null;
 	boolean last = false;
 	int page = 0;
@@ -231,7 +231,7 @@ public class Brain {
     }
 
     @SuppressWarnings("unchecked")
-    public static Map<String,SemanticType> getSemanticTypes(){
+    public Map<String,SemanticType> getSemanticTypes(){
 	PostResponse response = null;
 	boolean last = false;
 	int page = 0;
@@ -254,7 +254,7 @@ public class Brain {
     }
 
     @SuppressWarnings("unchecked")
-    public static Set<Concept> getSuperNodes(){
+    public Set<Concept> getSuperNodes(){
 	PostResponse response = null;
 
 	if (superNodes == null){
@@ -316,7 +316,7 @@ public class Brain {
      * concept-to-concept
      */
 
-    public List<List<PathElement>> getConceptToConceptDirect(Set<Concept> sources, Set<Concept> targets, Integer page, Integer size){
+    public DirectRelationshipResponse getConceptToConceptDirect(Set<Concept> sources, Set<Concept> targets, Integer page, Integer size){
 	SearchPathSpecification searchPathSpecification = new SearchPathSpecification();
 	searchPathSpecification.setLeftInputs(Utils.getConceptIds(sources));
 	searchPathSpecification.setRightInputs(Utils.getConceptIds(targets));
@@ -325,12 +325,12 @@ public class Brain {
 	searchPathSpecification.addAdditionalField("publicationIds");
 	PostResponse response = Utils.postUrl(endpoint + "/external/concept-to-concept/direct?page=" + page + "&size=" + size, gson.toJson(searchPathSpecification), token );
 	if (response.getStatus() == 200){
-	    return gson.fromJson(response.getContent(), DirectRelationshipResponse.class).convert(this);
+	    return gson.fromJson(response.getContent(), DirectRelationshipResponse.class);
 	}
 	return null;
     }
 
-    public List<List<PathElement>> getConceptToConceptIndirect(Set<Concept> sources, Set<Concept> targets, Integer page, Integer size){
+    public DirectRelationshipResponse getConceptToConceptIndirect(Set<Concept> sources, Set<Concept> targets, Integer page, Integer size){
 	SearchPathSpecification searchPathSpecification = new SearchPathSpecification();
 	searchPathSpecification.setLeftInputs(Utils.getConceptIds(sources));
 	searchPathSpecification.setRightInputs(Utils.getConceptIds(targets));
@@ -338,32 +338,36 @@ public class Brain {
 	searchPathSpecification.addAdditionalField("tripleIds");
 	searchPathSpecification.addAdditionalField("publicationIds");
 	PostResponse response = Utils.postUrl(endpoint + "/external/concept-to-concept/indirect?page=" + page + "&size=" + size, gson.toJson(searchPathSpecification), token);
-	return response.getStatus() == 200 ? gson.fromJson(response.getContent(), DirectRelationshipResponse.class).convert(this) : null;
+	return response.getStatus() == 200 ? gson.fromJson(response.getContent(), DirectRelationshipResponse.class) : null;
     }
 
     /* 
      * concept-to-semantic
      */
 
-    public List<List<PathElement>> getConceptToSemanticDirect(Set<Concept> sources, Set<String> semanticCategories, Set<String> semanticTypes, Integer page, Integer size){
+    public DirectRelationshipResponse getConceptToSemanticDirect(Set<Concept> sources, Set<String> semanticCategories, Set<String> semanticTypes, Integer page, Integer size){
 	SearchPathSpecification searchPathSpecification = new SearchPathSpecification();
 	searchPathSpecification.setLeftInputs(Utils.getConceptIds(sources));
 	Set<String> targets = new HashSet<String>();
-	for (String semanticCategory : semanticCategories){
-	    targets.add("sc:"+semanticCategory);
+	if (semanticCategories != null){
+	    for (String semanticCategory : semanticCategories){
+		targets.add("sc:"+semanticCategory);
+	    }
 	}
-	for (String semanticType : semanticTypes){
-	    targets.add(!pattern.matcher(semanticType).matches() ? Brain.semanticTypes.get(semanticType).getId() : semanticType);
+	if (semanticTypes != null){
+	    for (String semanticType : semanticTypes){
+		targets.add(!pattern.matcher(semanticType).matches() ? Brain.semanticTypes.get(semanticType).getId() : semanticType);
+	    }
 	}
 	searchPathSpecification.setRightInputs(targets);
 	searchPathSpecification.addAdditionalField("predicateIds");
 	searchPathSpecification.addAdditionalField("tripleIds");
 	searchPathSpecification.addAdditionalField("publicationIds");
 	PostResponse response = Utils.postUrl(endpoint + "/external/concept-to-semantic/direct?page=" + page + "&size=" + size, gson.toJson(searchPathSpecification), token );
-	return response.getStatus() == 200 ? gson.fromJson(response.getContent(), DirectRelationshipResponse.class).convert(this) : null;
+	return response.getStatus() == 200 ? gson.fromJson(response.getContent(), DirectRelationshipResponse.class) : null;
     }
 
-    public List<List<PathElement>> getConceptToSemanticIndirect(Set<Concept> sources, Set<String> semanticCategories, Set<String> semanticTypes, Integer page, Integer size){
+    public DirectRelationshipResponse getConceptToSemanticIndirect(Set<Concept> sources, Set<String> semanticCategories, Set<String> semanticTypes, Integer page, Integer size){
 	SearchPathSpecification searchPathSpecification = new SearchPathSpecification();
 	searchPathSpecification.setLeftInputs(Utils.getConceptIds(sources));
 	Set<String> targets = new HashSet<String>();
@@ -385,7 +389,7 @@ public class Brain {
 	searchPathSpecification.addAdditionalField("publicationIds");
 	PostResponse response = Utils.postUrl(endpoint + "/external/concept-to-semantic/indirect?page=" + page + "&size=" + size, gson.toJson(searchPathSpecification), token );
 	if (response.getStatus() == 200){
-	    return gson.fromJson(response.getContent(), DirectRelationshipResponse.class).convert(this);
+	    return gson.fromJson(response.getContent(), DirectRelationshipResponse.class);
 	}
 	return null;
     }
@@ -465,13 +469,13 @@ public class Brain {
 	return pathSearchFilters;
     }
     
-    public Set<String> getPathSearchPathsInfo(List<Integer> paths) {
-	logger.info(StringUtils.join(paths,"->"));
+    @SuppressWarnings("unchecked")
+    public Set<PathInfo> getPathSearchPathsInfo(Set<Integer> paths) {
 	PathSearchPathsInfoSpecification pathSearchPathsInfoSpecification = new PathSearchPathsInfoSpecification();
-	pathSearchPathsInfoSpecification.setPaths(paths);
+	pathSearchPathsInfoSpecification.setPathIds(paths);
 	PostResponse response = Utils.postUrl(endpoint + "/external/path-search/paths-info", gson.toJson(pathSearchPathsInfoSpecification), token);
 	logger.info(response.getContent());
-	return null;
+	return (Set<PathInfo>) ((response.getStatus() == 200) ? gson.fromJson(response.getContent(), PathInfoSetType) : null);
     }
 
     /*

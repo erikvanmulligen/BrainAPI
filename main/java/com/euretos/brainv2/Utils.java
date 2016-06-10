@@ -147,8 +147,8 @@ public class Utils {
 	return result;
     }
 
-    public static List<Integer> getPath(List<PathElement> path) {
-	List<Integer> result = new ArrayList<Integer>(); 
+    public static Set<Integer> getPath(List<PathElement> path) {
+	Set<Integer> result = new HashSet<Integer>(); 
 	for (int i=0 ; i<path.size() ; i++){
 	    if (i==0){
 		result.add(path.get(i).getSource());

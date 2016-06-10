@@ -43,9 +43,9 @@ public class TestPathSearch {
     public void testPathSearchPathsInfo(){
 	Set<Concept> sourceConcepts = brain.getConceptsSearch(new ConceptQuery("A02BC01", null, null, Arrays.asList(new String[]{"Chemicals & Drugs"}), null, null));
 	Set<Concept> targetConcepts = brain.getConceptsSearch(new ConceptQuery("cytoplasm", true, null, Arrays.asList(new String[]{"Disorders"}), null, null));
-	List<List<PathElement>> paths = brain.getConceptToConceptIndirect(sourceConcepts, targetConcepts, 0, 20);
-	Set<String> filters = brain.getPathSearchPathsInfo(Utils.getPath(paths.get(0)));
-	logger.info(filters);
-	TestCase.assertTrue(filters.size()>0);
+	List<List<PathElement>> paths = brain.getConceptToConceptIndirect(sourceConcepts, targetConcepts, 0, 20).getPaths(brain);
+	Set<PathInfo> pathsInfo = brain.getPathSearchPathsInfo(Utils.getPath(paths.get(0)));
+	logger.info(pathsInfo);
+	TestCase.assertTrue(pathsInfo.size()>0);
     }
 }

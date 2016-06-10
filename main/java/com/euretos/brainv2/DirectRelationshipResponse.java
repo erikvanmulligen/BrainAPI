@@ -89,7 +89,7 @@ public class DirectRelationshipResponse {
 	this.number = number;
     }
 
-    public List<List<PathElement>> convert(Brain brain) {
+    public List<List<PathElement>> getPaths(Brain brain) {
 	List<List<PathElement>> result = null;
 	try{
 	    result = new ArrayList<List<PathElement>>();

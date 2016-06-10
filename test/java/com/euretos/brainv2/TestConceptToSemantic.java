@@ -36,7 +36,7 @@ public class TestConceptToSemantic {
 	Set<String> semanticCategories = new HashSet<String>();
 	semanticCategories.add("Disorders");
 	Set<String> semanticTypes = new HashSet<String>();
-	List<List<PathElement>> paths = brain.getConceptToSemanticDirect(sourceConcepts, semanticCategories, semanticTypes, 0, 20);
+	List<List<PathElement>> paths = brain.getConceptToSemanticDirect(sourceConcepts, semanticCategories, semanticTypes, 0, 20).getPaths(brain);
 	logger.info("paths:"+StringUtils.join(paths,"\n"));
 	TestCase.assertTrue(paths.size()>0);
     }
@@ -48,7 +48,7 @@ public class TestConceptToSemantic {
 	Set<String> semanticCategories = new HashSet<String>();
 	semanticCategories.add("Disorders");
 	Set<String> semanticTypes = new HashSet<String>();
-	List<List<PathElement>> paths = brain.getConceptToSemanticIndirect(sourceConcepts, semanticCategories, semanticTypes, 0, 20);
+	List<List<PathElement>> paths = brain.getConceptToSemanticIndirect(sourceConcepts, semanticCategories, semanticTypes, 0, 20).getPaths(brain);
 	logger.info("paths:"+StringUtils.join(paths,"\n"));
 	TestCase.assertTrue(paths.size()>0);
     }
