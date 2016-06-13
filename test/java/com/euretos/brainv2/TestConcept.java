@@ -37,6 +37,14 @@ public class TestConcept {
     }
 
     @Test
+    public void testGetConceptsByCUI() {
+	ConceptQuery conceptQuery = new ConceptQuery("C0024530", null, null, Arrays.asList(new String[]{"Disorders"}), null, null);
+	Set<Concept> concepts = brain.getConcepts(conceptQuery);
+	TestCase.assertEquals(concepts.size(), 1);
+	logger.info("concepts:["+StringUtils.join(concepts,",\n")+"]");
+    }
+
+    @Test
     public void testGetConceptsById(){
 	Set<Concept> concepts = brain.getConcepts("174139",null);
 	logger.info("concept:"+concepts.iterator().next());

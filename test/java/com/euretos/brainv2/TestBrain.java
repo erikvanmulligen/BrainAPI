@@ -20,7 +20,7 @@ public class TestBrain {
   
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-	brain = new Brain("https://www.euretos-brain.com/spine-ws", "vanmulligen@stcorp.nl", "crosby9");
+	brain = new Brain("https://www.euretos-brain.com/spine-ws", "mulligen@gmail.com", "crosby9");
     }
 
     @AfterClass
@@ -72,10 +72,9 @@ public class TestBrain {
 
     @Test
     public void testGetSemanticCategories() {
-	Map<String,SemanticCategory> semanticCategories = brain.getSemanticCategories();
-	System.out.println("["+StringUtils.join(semanticCategories.values(),",")+"]");
+	Set<String> semanticCategories = brain.getSemanticCategories();
 	TestCase.assertTrue(semanticCategories.size()>0);
-	logger.info("semanticCategories:["+StringUtils.join(semanticCategories.values(),",\n")+"]");
+	logger.info("semanticCategories:["+StringUtils.join(semanticCategories,",\n")+"]");
     }
 
     @Test

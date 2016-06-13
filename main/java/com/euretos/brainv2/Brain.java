@@ -56,7 +56,7 @@ public class Brain {
 
     private static Map<String,PredicateType> predicates = null;
     private static Map<String,SemanticType> semanticTypes = null;
-    private static Map<String,SemanticCategory> semanticCategories = null;
+    private static Set<String> semanticCategories = null;
     private static Set<String> scoringAlgorithms = null;
     private static Set<String> knowledgeBases = null;
     private static Set<String> sources = null;
@@ -85,8 +85,9 @@ public class Brain {
 	    return json == null ? null : new Date(json.getAsLong());
 	}
     };
+    
     private static Gson gson = new GsonBuilder().serializeNulls().registerTypeAdapter(Date.class, ser).registerTypeAdapter(Date.class, deser).create();
-
+    private static Gson gson2 = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()./*serializeNulls().*/registerTypeAdapter(Date.class, ser).registerTypeAdapter(Date.class, deser).create();
 
     public Brain( String aEndpoint, String aUsername, String aPassword ){
 	username = aUsername;
@@ -207,22 +208,22 @@ public class Brain {
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String,SemanticCategory> getSemanticCategories(){
+    public Set<String> getSemanticCategories(){
 	PostResponse response = null;
 	boolean last = false;
 	int page = 0;
 
 	if (semanticCategories == null){
-	    semanticCategories = new HashMap<String,SemanticCategory>();
+	    semanticCategories = new HashSet<String>();
 	    do{
-		response = Utils.getUrl(endpoint + "/external/predicates?page="+page+"&size=20", token);
+		response = Utils.getUrl(endpoint + "/external/semantic-categories?page="+page+"&size=20", token);
 		if (response.getStatus() == 200){
 		    JsonObject msg = new JsonParser().parse(response.getContent()).getAsJsonObject();
 		    last = msg.get("last").getAsBoolean();
 		    page = msg.get("number").getAsInt() + 1;
 		    logger.info(msg.get("content").toString());
 		    for (SemanticCategory semanticCategory : (Set<SemanticCategory>)gson.fromJson(msg.get("content").toString(), SemanticCategorySetType)){
-			semanticCategories.put(semanticCategory.getId(), semanticCategory);
+			semanticCategories.add(semanticCategory.getName());
 		    }
 		}
 	    }while (response.getStatus() == 200 && last == false);
@@ -282,7 +283,8 @@ public class Brain {
     public Set<Concept> getConceptsSearch(ConceptQuery conceptQuery) {
 	if (!conceptsCache.containsKey(conceptQuery.getQueryString())){
 	    Set<Concept> result = new HashSet<Concept>();
-	    PostResponse response = Utils.postUrl(endpoint + "/external/concepts/search", gson.toJson(conceptQuery), token);
+	    logger.debug("object conceptQuery =" + gson2.toJson(conceptQuery));
+	    PostResponse response = Utils.postUrl(endpoint + "/external/concepts/search", gson2.toJson(conceptQuery), token);
 	    if ( response.getStatus() == 200 ){
 		result = gson.fromJson(response.getContent(), ConceptSetType);
 		conceptsCache.put(conceptQuery.getQueryString(), result);
@@ -556,7 +558,7 @@ public class Brain {
 	}
 	else if (term != null){
 	    if (!conceptsCache.containsKey(term)){
-		PostResponse response = Utils.postUrl(endpoint + "/external/concepts/search", gson.toJson(new ConceptQuery(term,null,null,null,null,null)), token );
+		PostResponse response = Utils.postUrl(endpoint + "/external/concepts/search", gson2.toJson(new ConceptQuery(term,null,null,null,null,null)), token );
 		if (response.getStatus() == 200){
 		    Set<Concept> result = gson.fromJson(response.getContent(), ConceptSetType);
 		    conceptsCache.put(term, result);
@@ -571,14 +573,19 @@ public class Brain {
     }
 
     public Set<Concept> getConcepts(ConceptQuery conceptQuery) {
-	String term = conceptQuery.getQueryString();
+	String term = conceptQuery.getTerm();
 	if (term != null){
 	    if (!conceptsCache.containsKey(term)){
-		PostResponse response = Utils.postUrl(endpoint + "/external/concepts/search", gson.toJson(conceptQuery), token );
+		logger.debug("object conceptQuery =" + gson2.toJson(conceptQuery));
+		PostResponse response = Utils.postUrl(endpoint + "/external/concepts/search", gson2.toJson(conceptQuery), token );
 		if (response.getStatus() == 200){
 		    Set<Concept> result = gson.fromJson(response.getContent(), ConceptSetType);
 		    conceptsCache.put(term, result);
 		    return result;
+		}
+		else{
+		    logger.info("queryString = " + conceptQuery.getQueryString());
+		    logger.error("failed to retrieve concepts: " + response.getContent().toString());
 		}
 	    }
 	    else{

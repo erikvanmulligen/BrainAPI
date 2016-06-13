@@ -1,5 +1,7 @@
 package com.euretos.brainv2;
 
+import com.google.gson.annotations.Expose;
+
 public class Concept {
     private String id = null;
     private String name = null;

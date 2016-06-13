@@ -3,6 +3,8 @@
  */
 package com.euretos.brainv2;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * (C) 2013,2014 Science and Technology Corporation, Delft, The Netherlands
  *

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>brain-api</groupId>
 	<artifactId>brain-api</artifactId>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.0.7-SNAPSHOT</version>
 	<build>
 		<sourceDirectory>main/java</sourceDirectory>
 		<plugins>
@@ -108,16 +108,10 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.3.2</version>
 		</dependency>
-		<!-- http://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-json-jackson -->
-		<!-- http://mvnrepository.com/artifact/io.swagger/swagger-annotations -->
-		<!-- http://mvnrepository.com/artifact/com.brsanthu/migbase64 -->
 		<dependency>
 			<groupId>com.brsanthu</groupId>
 			<artifactId>migbase64</artifactId>
 			<version>2.2</version>
 		</dependency>
-		<!-- http://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-json-jackson -->
-		<!-- http://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-joda -->
-		<!-- http://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
 	</dependencies>
 </project>

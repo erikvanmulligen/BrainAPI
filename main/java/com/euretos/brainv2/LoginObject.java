@@ -1,9 +1,11 @@
 package com.euretos.brainv2;
 
+import com.google.gson.annotations.Expose;
+
 public class LoginObject {
 
-    private String username = null;
-    private String password = null;
+    @Expose private String username = null;
+    @Expose private String password = null;
 
     public LoginObject(String username, String password) {
 	this.setUsername(username);

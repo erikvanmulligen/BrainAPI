@@ -32,9 +32,10 @@ public class TestConceptToConcept {
     public void testDirectPathConcepts(){
 	ConceptQuery sourceConceptQuery = new ConceptQuery("A02BC01", null, null, Arrays.asList(new String[]{"Chemicals & Drugs"}), null, null);
 	Set<Concept> sourceConcepts = brain.getConceptsSearch(sourceConceptQuery);
+	logger.debug("source concepts="+sourceConcepts);
 	ConceptQuery targetConceptQuery = new ConceptQuery("antimicrobial susceptibility", true, null, Arrays.asList(new String[]{"Disorders"}), null, null);
 	Set<Concept> targetConcepts = brain.getConceptsSearch(targetConceptQuery);
-	logger.info(targetConcepts);
+	logger.debug("target concepts="+targetConcepts);
 	List<List<PathElement>> paths = brain.getConceptToConceptDirect(sourceConcepts, targetConcepts, 0, 20).getPaths(brain);
 	logger.info("paths:"+StringUtils.join(paths,"\n"));
 	TestCase.assertTrue(paths.size()>0);
