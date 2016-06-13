@@ -1,11 +1,19 @@
 package com.euretos.brainv2;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class PublicationsSpecification {
     private Set<String> ids = null;
-    private Set<String> additionalFields = null;
+    private Set<String> additionalFields = new HashSet<String>();
 
+    public PublicationsSpecification(){
+	additionalFields.add("url");
+	additionalFields.add("sourceName");
+	additionalFields.add("sourceId");
+	additionalFields.add("publicationDateHumanReadableUTC");
+    }
+    
     public Set<String> getIds() {
         return ids;
     }

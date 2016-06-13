@@ -7,7 +7,6 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
@@ -513,7 +512,9 @@ public class Brain {
     public Set<PublicationInfo> getPublications(Set<String> publicationIds) {
 	PublicationsSpecification publicationsSpecification = new PublicationsSpecification();
 	publicationsSpecification.setIds(publicationIds);
+	System.out.println("publicationSpecification="+gson.toJson(publicationsSpecification));
 	PostResponse response = Utils.postUrl(endpoint + "/external/publications", gson.toJson(publicationsSpecification), token);
+	logger.info("getPublications() response:" + response.getContent()); 
 	return (Set<PublicationInfo>) ((response.getStatus() == 200) ? gson.fromJson(response.getContent(), PublicationInfoSetType) : null);
     }
     

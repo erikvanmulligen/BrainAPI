@@ -18,7 +18,8 @@
 	</Appenders>
 	<Loggers>
 		<Logger name="org.eclipse.jetty" level="DEBUG" />
-		<Root level="INFO">
+		<Logger name="com.euretos.brainv2" level="DEBUG"/>
+		<Root level="WARN">
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="RollingFile" />
 		</Root>

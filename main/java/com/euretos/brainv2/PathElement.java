@@ -19,6 +19,7 @@ public class PathElement implements Cloneable{
     private Set<Integer> targetSchemes = new HashSet<Integer>();
     private Set<String> tripleIds = new HashSet<String>();
     private Set<String> publicationIds = new HashSet<String>();
+    private Set<PublicationInfo> publications = new HashSet<PublicationInfo>();
 
     public Integer getSource() {
 	return source;
@@ -119,6 +120,18 @@ public class PathElement implements Cloneable{
 
     public void addPublicationId(String publicationId) {
 	this.publicationIds.add(publicationId);
+    }
+
+    public Set<PublicationInfo> getPublications() {
+	return publications;
+    }
+
+    public void setPublications(Set<PublicationInfo> publications) {
+	this.publications = publications;
+    }
+    
+    public void add(PublicationInfo publication){
+	this.publications.add(publication);
     }
 
 }
