@@ -164,4 +164,8 @@ public class DirectRelationshipResponse {
 	}
 	return result;
     }
+
+    public List<RelationElt> getContent() {
+        return content;
+    }
 }

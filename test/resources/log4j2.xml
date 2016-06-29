@@ -19,7 +19,7 @@
 	<Loggers>
 		<Logger name="org.eclipse.jetty" level="DEBUG" />
 		<Logger name="com.euretos.brainv2" level="DEBUG"/>
-		<Root level="WARN">
+		<Root level="INFO">
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="RollingFile" />
 		</Root>

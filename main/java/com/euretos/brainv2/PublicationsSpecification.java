@@ -11,7 +11,7 @@ public class PublicationsSpecification {
 	additionalFields.add("url");
 	additionalFields.add("sourceName");
 	additionalFields.add("sourceId");
-	additionalFields.add("publicationDateHumanReadableUTC");
+	additionalFields.add("publicationDateAsEpochMillisecondsUTC");
     }
     
     public Set<String> getIds() {

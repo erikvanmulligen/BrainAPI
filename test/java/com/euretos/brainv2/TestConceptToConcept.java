@@ -36,7 +36,7 @@ public class TestConceptToConcept {
 	ConceptQuery targetConceptQuery = new ConceptQuery("antimicrobial susceptibility", true, null, Arrays.asList(new String[]{"Disorders"}), null, null);
 	Set<Concept> targetConcepts = brain.getConceptsSearch(targetConceptQuery);
 	logger.debug("target concepts="+targetConcepts);
-	List<List<PathElement>> paths = brain.getConceptToConceptDirect(sourceConcepts, targetConcepts, 0, 20).getPaths(brain);
+	List<List<PathElement>> paths = brain.getConceptToConceptDirect(Utils.getConceptIds(sourceConcepts), Utils.getConceptIds(targetConcepts), 0, 20).getPaths(brain);
 	logger.info("paths:"+StringUtils.join(paths,"\n"));
 	TestCase.assertTrue(paths.size()>0);
     }
@@ -48,7 +48,7 @@ public class TestConceptToConcept {
 	ConceptQuery targetConceptQuery = new ConceptQuery("cytoplasm", true, null, Arrays.asList(new String[]{"Disorders"}), null, null);
 	Set<Concept> targetConcepts = brain.getConceptsSearch(targetConceptQuery);
 	logger.info(targetConcepts);
-	List<List<PathElement>> paths = brain.getConceptToConceptIndirect(sourceConcepts, targetConcepts, 0, 20).getPaths(brain);
+	List<List<PathElement>> paths = brain.getConceptToConceptIndirect(Utils.getConceptIds(sourceConcepts), Utils.getConceptIds(targetConcepts), 0, 20).getPaths(brain);
 	for (List<PathElement> path : paths){
 	    logger.info(StringUtils.join(path,","));
 	}
@@ -56,6 +56,21 @@ public class TestConceptToConcept {
 	TestCase.assertTrue(paths.size()>0);
     }
 
+    @Test
+    public void testIndirectPathConcepts2(){
+	ConceptQuery sourceConceptQuery = new ConceptQuery("A02BC01", null, null, Arrays.asList(new String[]{"Chemicals & Drugs"}), null, null);
+	Set<Concept> sourceConcepts = brain.getConceptsSearch(sourceConceptQuery);
+	ConceptQuery targetConceptQuery = new ConceptQuery("cytoplasm", true, null, Arrays.asList(new String[]{"Disorders"}), null, null);
+	Set<Concept> targetConcepts = brain.getConceptsSearch(targetConceptQuery);
+	logger.info(targetConcepts);
+	DirectRelationshipResponse response = brain.getConceptToConceptIndirect(Utils.getConceptIds(sourceConcepts), Utils.getConceptIds(targetConcepts), 0, 20);
+	for ( RelationElt relationElt : response.getContent() ){
+	    for ( Relation relation : relationElt.getRelationships()){
+		logger.info(relationElt.getScore() + "\t" + relation.getConcept0Id() + "\t" + relation.getConcept1Id() + "\t" + StringUtils.join(relation.getPredicateIds()));
+	    }
+	}
+	TestCase.assertTrue(response.getContent().size()>0);
+    }
 
 
 }

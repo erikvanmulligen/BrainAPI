@@ -10,7 +10,7 @@ public class Relation {
     private Set<String> predicateIds = null;
     private Set<String> tripleIds = null;
     private Set<String> publicationIds = null;
-    private Float score = null;
+    
     public String getConcept0Id() {
         return concept0Id;
     }
@@ -28,12 +28,6 @@ public class Relation {
     }
     public void setPredicateIds(Set<String> predicateIds) {
         this.predicateIds = predicateIds;
-    }
-    public Float getScore() {
-        return score;
-    }
-    public void setScore(Float score) {
-        this.score = score;
     }
     public Set<String> getTripleIds() {
 	return tripleIds;

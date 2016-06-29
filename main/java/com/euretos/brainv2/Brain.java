@@ -317,10 +317,10 @@ public class Brain {
      * concept-to-concept
      */
 
-    public DirectRelationshipResponse getConceptToConceptDirect(Set<Concept> sources, Set<Concept> targets, Integer page, Integer size){
+    public DirectRelationshipResponse getConceptToConceptDirect(Set<String> sources, Set<String> targets, Integer page, Integer size){
 	SearchPathSpecification searchPathSpecification = new SearchPathSpecification();
-	searchPathSpecification.setLeftInputs(Utils.getConceptIds(sources));
-	searchPathSpecification.setRightInputs(Utils.getConceptIds(targets));
+	searchPathSpecification.setLeftInputs(sources);
+	searchPathSpecification.setRightInputs(targets);
 	searchPathSpecification.addAdditionalField("predicateIds");
 	searchPathSpecification.addAdditionalField("tripleIds");
 	searchPathSpecification.addAdditionalField("publicationIds");
@@ -331,24 +331,26 @@ public class Brain {
 	return null;
     }
 
-    public DirectRelationshipResponse getConceptToConceptIndirect(Set<Concept> sources, Set<Concept> targets, Integer page, Integer size){
+    public DirectRelationshipResponse getConceptToConceptIndirect(Set<String> sources, Set<String> targets, Integer page, Integer size){
 	SearchPathSpecification searchPathSpecification = new SearchPathSpecification();
-	searchPathSpecification.setLeftInputs(Utils.getConceptIds(sources));
-	searchPathSpecification.setRightInputs(Utils.getConceptIds(targets));
+	searchPathSpecification.setLeftInputs(sources);
+	searchPathSpecification.setRightInputs(targets);
 	searchPathSpecification.addAdditionalField("predicateIds");
 	searchPathSpecification.addAdditionalField("tripleIds");
 	searchPathSpecification.addAdditionalField("publicationIds");
 	PostResponse response = Utils.postUrl(endpoint + "/external/concept-to-concept/indirect?page=" + page + "&size=" + size, gson.toJson(searchPathSpecification), token);
+	logger.info("getConceptToConceptIndirect():"+response.getContent());
 	return response.getStatus() == 200 ? gson.fromJson(response.getContent(), DirectRelationshipResponse.class) : null;
     }
+    
 
     /* 
      * concept-to-semantic
      */
 
-    public DirectRelationshipResponse getConceptToSemanticDirect(Set<Concept> sources, Set<String> semanticCategories, Set<String> semanticTypes, Integer page, Integer size){
+    public DirectRelationshipResponse getConceptToSemanticDirect(Set<String> sources, Set<String> semanticCategories, Set<String> semanticTypes, Integer page, Integer size){
 	SearchPathSpecification searchPathSpecification = new SearchPathSpecification();
-	searchPathSpecification.setLeftInputs(Utils.getConceptIds(sources));
+	searchPathSpecification.setLeftInputs(sources);
 	Set<String> targets = new HashSet<String>();
 	if (semanticCategories != null){
 	    for (String semanticCategory : semanticCategories){
@@ -368,9 +370,9 @@ public class Brain {
 	return response.getStatus() == 200 ? gson.fromJson(response.getContent(), DirectRelationshipResponse.class) : null;
     }
 
-    public DirectRelationshipResponse getConceptToSemanticIndirect(Set<Concept> sources, Set<String> semanticCategories, Set<String> semanticTypes, Integer page, Integer size){
+    public DirectRelationshipResponse getConceptToSemanticIndirect(Set<String> sources, Set<String> semanticCategories, Set<String> semanticTypes, Integer page, Integer size){
 	SearchPathSpecification searchPathSpecification = new SearchPathSpecification();
-	searchPathSpecification.setLeftInputs(Utils.getConceptIds(sources));
+	searchPathSpecification.setLeftInputs(sources);
 	Set<String> targets = new HashSet<String>();
 	for (String semanticCategory : semanticCategories){
 	    targets.add("sc:"+semanticCategory);
@@ -399,9 +401,9 @@ public class Brain {
      * 	direct-connections-count
      */
 
-    public ConnectionCountResponse getDirectConnectionsCount(Set<Concept> concepts){
+    public ConnectionCountResponse getDirectConnectionsCount(Set<String> concepts){
 	ConnectionCountSpecification connectionCountSpecification = new ConnectionCountSpecification();
-	connectionCountSpecification.setIds(Utils.getConceptIds(concepts));
+	connectionCountSpecification.setIds(concepts);
 	connectionCountSpecification.addAdditionalField("categories");
 	connectionCountSpecification.addAdditionalField("predicates");
 	PostResponse response = Utils.postUrl(endpoint + "/external/direct-connections-count", gson.toJson(connectionCountSpecification), token);
@@ -422,9 +424,9 @@ public class Brain {
 	return directConnectionsCountAdditionalFields;
     }
 
-    public Set<SemanticTypeCount> getDirectConnectionsCountSemanticTypes(Set<Concept> concepts, Set<String> semanticCategories){
+    public Set<SemanticTypeCount> getDirectConnectionsCountSemanticTypes(Set<String> concepts, Set<String> semanticCategories){
 	ConnectionCountSemanticTypeSpecification connectionCountSemanticTypeSpecification = new ConnectionCountSemanticTypeSpecification();
-	connectionCountSemanticTypeSpecification.setIds(Utils.getConceptIds(concepts));
+	connectionCountSemanticTypeSpecification.setIds(concepts);
 	connectionCountSemanticTypeSpecification.setSemanticCategories(semanticCategories);
 	PostResponse response = Utils.postUrl(endpoint + "/external/direct-connections-count/semantic-types", gson.toJson(connectionCountSemanticTypeSpecification), token);
 	logger.info(response.getContent());
@@ -435,9 +437,9 @@ public class Brain {
     }
     
     
-    public DirectConnections getDirectConnectionsWithScore(Set<Concept> concepts, Set<Set<String>> filterGroups, Integer page, Integer size){
+    public DirectConnections getDirectConnectionsWithScore(Set<String> concepts, Set<Set<String>> filterGroups, Integer page, Integer size){
 	DirectConnectionWithScoreSpecification directConnectionWithScoreSpecification = new DirectConnectionWithScoreSpecification();
-	directConnectionWithScoreSpecification.setIds(Utils.getConceptIds(concepts));
+	directConnectionWithScoreSpecification.setIds(concepts);
 	directConnectionWithScoreSpecification.setFilterGroups(filterGroups);
 	PostResponse response = Utils.postUrl(endpoint + "/external/direct-connections-with-scores?page=" + page + "&size=" + size, gson.toJson(directConnectionWithScoreSpecification), token);
 	logger.info(response.getContent());

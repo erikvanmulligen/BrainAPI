@@ -30,7 +30,7 @@ public class TestPublications {
     public void testPublications(){
 	Set<Concept> sourceConcepts = brain.getConceptsSearch(new ConceptQuery("A02BC01", null, null, Arrays.asList(new String[]{"Chemicals & Drugs"}), null, null));
 	Set<Concept> targetConcepts = brain.getConceptsSearch(new ConceptQuery("cytoplasm", true, null, Arrays.asList(new String[]{"Disorders"}), null, null));
-	List<List<PathElement>> paths = brain.getConceptToConceptIndirect(sourceConcepts, targetConcepts, 0, 20).getPaths(brain);
+	List<List<PathElement>> paths = brain.getConceptToConceptIndirect(Utils.getConceptIds(sourceConcepts), Utils.getConceptIds(targetConcepts), 0, 20).getPaths(brain);
 	Set<PublicationInfo> publications = brain.getPublications(Utils.getPublicationIds(paths.get(0)));
 	logger.info(publications);
 	TestCase.assertTrue(publications.size()>0);
@@ -40,7 +40,7 @@ public class TestPublications {
     public void testPublication(){
 	Set<Concept> sourceConcepts = brain.getConceptsSearch(new ConceptQuery("A02BC01", null, null, Arrays.asList(new String[]{"Chemicals & Drugs"}), null, null));
 	Set<Concept> targetConcepts = brain.getConceptsSearch(new ConceptQuery("cytoplasm", true, null, Arrays.asList(new String[]{"Disorders"}), null, null));
-	List<List<PathElement>> paths = brain.getConceptToConceptIndirect(sourceConcepts, targetConcepts, 0, 20).getPaths(brain);
+	List<List<PathElement>> paths = brain.getConceptToConceptIndirect(Utils.getConceptIds(sourceConcepts), Utils.getConceptIds(targetConcepts), 0, 20).getPaths(brain);
 	if (paths != null && !paths.isEmpty()){
 	    Set<String> publicationIds = Utils.getPublicationIds(paths.get(0));
 	    if (publicationIds != null && !publicationIds.isEmpty()){

@@ -29,7 +29,7 @@ public class TestDirectConnection {
     public void testDirectConnectionCount(){
 	ConceptQuery conceptQuery = new ConceptQuery("A02BC01", null, null, Arrays.asList(new String[]{"Chemicals & Drugs"}), null, null);
 	Set<Concept> concepts = brain.getConceptsSearch(conceptQuery);
-	ConnectionCountResponse response = brain.getDirectConnectionsCount(concepts);
+	ConnectionCountResponse response = brain.getDirectConnectionsCount(Utils.getConceptIds(concepts));
 	logger.info(response);
 	TestCase.assertTrue(response.getCategories().size()>0 && response.getPredicates().size()>0);
     }
@@ -47,7 +47,7 @@ public class TestDirectConnection {
 	Set<Concept> concepts = brain.getConceptsSearch(conceptQuery);
 	Set<String> semanticCategories = new HashSet<String>();
 	semanticCategories.add("Disorders");
-	Set<SemanticTypeCount> semanticTypes = brain.getDirectConnectionsCountSemanticTypes(concepts, semanticCategories);
+	Set<SemanticTypeCount> semanticTypes = brain.getDirectConnectionsCountSemanticTypes(Utils.getConceptIds(concepts), semanticCategories);
 	logger.info(semanticTypes);
 	TestCase.assertTrue(semanticTypes.size()>0);
     }
@@ -60,7 +60,7 @@ public class TestDirectConnection {
 	Set<String> filter = new HashSet<String>();
 	filter.add("sc:Disorders");
 	filters.add(filter);
-	DirectConnections directConnections = brain.getDirectConnectionsWithScore(concepts,filters,0,20);
+	DirectConnections directConnections = brain.getDirectConnectionsWithScore(Utils.getConceptIds(concepts),filters,0,20);
 	logger.info(directConnections.getContent());
 	TestCase.assertTrue(directConnections.getContent().size()>0);
     }

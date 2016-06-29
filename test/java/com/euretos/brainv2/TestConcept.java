@@ -29,12 +29,21 @@ public class TestConcept {
     }
 
     @Test
-    public void testGetConceptsByTerm() {
+    public void testGetConceptsByTerm1() {
 	ConceptQuery conceptQuery = new ConceptQuery("A02BC01", null, null, Arrays.asList(new String[]{"Chemicals & Drugs"}), null, null);
 	Set<Concept> concepts = brain.getConcepts(conceptQuery);
 	TestCase.assertEquals(concepts.size(), 1);
 	logger.info("concepts:["+StringUtils.join(concepts,",\n")+"]");
     }
+    
+    @Test
+    public void testGetConceptsByTerm2() {
+	ConceptQuery conceptQuery = new ConceptQuery("A10BB02", null, null, Arrays.asList(new String[]{"Chemicals & Drugs"}), null, null);
+	Set<Concept> concepts = brain.getConcepts(conceptQuery);
+	TestCase.assertEquals(concepts.size(), 1);
+	logger.info("concepts:["+StringUtils.join(concepts,",\n")+"]");
+    }
+    
 
     @Test
     public void testGetConceptsByCUI() {

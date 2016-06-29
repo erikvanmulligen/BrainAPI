@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class PathElement implements Cloneable{
+public class PathElement implements Cloneable {
 
     private Integer source = null;
     private String sourceName = null;
