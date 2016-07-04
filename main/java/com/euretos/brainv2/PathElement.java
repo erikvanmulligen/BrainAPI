@@ -131,6 +131,11 @@ public class PathElement implements Cloneable {
     }
     
     public void add(PublicationInfo publication){
+	for (PublicationInfo aPublication : this.publications){
+	    if (aPublication.getId().equalsIgnoreCase(publication.getId())){
+		return;
+	    }
+	}
 	this.publications.add(publication);
     }
 

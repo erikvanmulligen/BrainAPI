@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 public class Concept {
     private String id = null;
     private String name = null;
+    private String semanticCategory = null;
     
     public String getId() {
         return id;
@@ -25,5 +26,13 @@ public class Concept {
     @Override
     public String toString(){
 	return "{\"id\":\""+id+"\",\"name\":\""+name+"\"}";
+    }
+
+    public String getSemanticCategory() {
+	return semanticCategory;
+    }
+
+    public void setSemanticCategory(String semanticCategory) {
+	this.semanticCategory = semanticCategory;
     }
 }

@@ -338,6 +338,7 @@ public class Brain {
 	searchPathSpecification.addAdditionalField("predicateIds");
 	searchPathSpecification.addAdditionalField("tripleIds");
 	searchPathSpecification.addAdditionalField("publicationIds");
+	searchPathSpecification.addAdditionalField("semanticCategory");
 	PostResponse response = Utils.postUrl(endpoint + "/external/concept-to-concept/indirect?page=" + page + "&size=" + size, gson.toJson(searchPathSpecification), token);
 	logger.info("getConceptToConceptIndirect():"+response.getContent());
 	return response.getStatus() == 200 ? gson.fromJson(response.getContent(), DirectRelationshipResponse.class) : null;
